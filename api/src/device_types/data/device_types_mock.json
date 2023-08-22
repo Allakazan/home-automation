@@ -1,0 +1,76 @@
+[
+    {
+        "id": "9bc2315f-5268-46c1-b449-5dd974163075",
+        "label": "Switch",
+        "type": "switch",
+        "icon": "smart-switch",
+        "actions": [
+            {
+                "action": "on",
+                "label": "On"
+            },
+            {
+                "action": "off",
+                "label": "Off"
+            }
+        ]
+    },
+    {
+        "id": "363b84a9-cd68-45d3-90f9-c96ee85b2499",
+        "label": "Plug",
+        "type": "plug",
+        "icon": "smart-plug",
+        "actions": [
+            {
+                "action": "on",
+                "label": "On"
+            },
+            {
+                "action": "off",
+                "label": "Off"
+            }
+        ]
+    },
+    {
+        "id": "c36ff849-6f5e-4e73-a477-bfdefc2a9047",
+        "label": "RGB Led",
+        "type": "led_rgb",
+        "icon": "smart-bulb",
+        "actions": [
+            {
+                "action": "on",
+                "label": "On"
+            },
+            {
+                "action": "off",
+                "label": "Off"
+            },
+            {
+                "input-type": "color-wheel",
+                "action": "color",
+                "label": "Color"
+            }
+        ]
+    },
+    {
+        "id": "89b7734f-40fb-4459-a3e4-bdc8091b3bd3",
+        "label": "RGBW Led",
+        "type": "led_rgbw",
+        "icon": "smart-bulb",
+        "actions": [
+            {
+                "action": "on",
+                "label": "On"
+            },
+            {
+                "action": "off",
+                "label": "Off"
+            },
+            {
+                "input-type": "color-wheel",
+                "action": "color",
+                "label": "Color"
+            }
+        ]
+    }
+]
