@@ -17,6 +17,13 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
+  },
+  "watchOptions": {
+    "watchFile": "PriorityPollingInterval",
+    "watchDirectory": "DynamicPriorityPolling",
+    "fallbackPolling": "DynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules", "dist"]
   }
 }

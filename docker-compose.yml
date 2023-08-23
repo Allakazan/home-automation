@@ -19,14 +19,19 @@ services:
     build:
       dockerfile: Dockerfile
       context: "./api"
+      target: development
     volumes:
       - /app/node_modules
       - ./api:/app
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
     links:
       - mongodb
     depends_on:
       - mongodb
     environment:
+      - NODE_ENV=development
       - DB_HOST=mongodb
       - DB_PORT=27017
       - DB_USERNAME=app_user
