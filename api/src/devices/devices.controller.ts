@@ -1,20 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Query, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { FindAllDevicesDto } from './dto/find-all-devices.dto';
 
+const mockUserID = '123'
 @Controller('devices')
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
   @Post()
   create(@Body() createDeviceDto: CreateDeviceDto) {
-    return this.devicesService.create(createDeviceDto);
+    return this.devicesService.create(createDeviceDto, mockUserID);
   }
 
   @Get()
-  findAll() {
-    return this.devicesService.findAll();
+  findAll(@Query() query: FindAllDevicesDto) {
+    return this.devicesService.findAll(query, mockUserID);
   }
 
   @Get(':id')

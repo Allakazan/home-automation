@@ -6,6 +6,9 @@ export class Device {
     id: ObjectId;
 
     @Column()
+    userID: string;
+
+    @Column()
     room: string;
 
     @Column()
