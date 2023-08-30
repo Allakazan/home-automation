@@ -1,19 +1,17 @@
-import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
-
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from 'src/entities/base.entity';
 @Entity()
-export class Device {
-    @ObjectIdColumn()
-    id: ObjectId;
+export class Device extends BaseEntity {
 
-    @Column()
+    @Column({ type: 'varchar', length: 100 })
     userID: string;
 
-    @Column()
+    @Column({ type: 'varchar', length: 300 })
     room: string;
 
-    @Column()
+    @Column({ type: 'varchar', length: 300 })
     name: string;
 
-    @Column()
+    @Column({ type: 'varchar', length: 300 })
     type: string;
 }

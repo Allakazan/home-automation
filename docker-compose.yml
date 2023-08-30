@@ -27,16 +27,17 @@ services:
     ports:
       - "3000:3000"
     links:
-      - mongodb
+      - postgres
     depends_on:
-      - mongodb
+      postgres:
+        condition: service_healthy
     environment:
       - NODE_ENV=development
-      - DB_HOST=mongodb
-      - DB_PORT=27017
+      - DB_HOST=postgres
+      - DB_PORT=5432
       - DB_USERNAME=app_user
       - DB_PASSWORD=app_password
-      - DB_DATABASE=admin
+      - DB_DATABASE=app_db
     networks:
       - node-webapp-network
 
@@ -53,17 +54,19 @@ services:
     networks:
       - node-webapp-network
 
-  mongodb:
-    container_name: mongodb
-    image: mongo:6.0
-    volumes:
-      - ~/mongo:/data/db
+  postgres:
+    image: postgres:11
     ports:
-      - "27017:27017"
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d app_db -U app_user"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=app_user
-      - MONGO_INITDB_ROOT_PASSWORD=app_password
-      - MONGO_INITDB_DATABASE=admin
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=app_password
+      - POSTGRES_DB=app_db
     networks:
       - node-webapp-network
 

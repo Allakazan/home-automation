@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, MongoRepository, UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult, Repository } from 'typeorm';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { FindAllDevicesDto } from './dto/find-all-devices.dto';
 import { Device } from './entities/device.entity';
-import { ObjectId } from 'mongodb';
 
 import { Pagination } from 'src/types/pagination';
 
@@ -13,7 +12,7 @@ import { Pagination } from 'src/types/pagination';
 export class DevicesService {
   constructor(
     @InjectRepository(Device)
-    private deviceRepository: MongoRepository<Device>,
+    private deviceRepository: Repository<Device>,
   ) {}
 
   create(createDeviceDto: CreateDeviceDto, userID: string): Promise<Device> {
@@ -43,8 +42,8 @@ export class DevicesService {
     }
   }
 
-  findOne(id: string): Promise<Device> {
-    return this.deviceRepository.findOne({where: { _id: new ObjectId(id) }})
+  findOne(id: string): Promise<Device | null> {
+    return this.deviceRepository.findOneBy({id})
   }
 
   update(id: string, updateDeviceDto: UpdateDeviceDto): Promise<UpdateResult> {
@@ -52,6 +51,6 @@ export class DevicesService {
   }
 
   remove(id: string): Promise<DeleteResult> {
-    return this.deviceRepository.delete(id);
+    return this.deviceRepository.softDelete(id)
   }
 }
