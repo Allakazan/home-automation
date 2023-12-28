@@ -23,7 +23,7 @@ services:
       - /app/node_modules
       - ./api:/app
     #command: npm run start:dev
-    entrypoint: ["npm", "run", "start:dev"]
+    entrypoint: ["npm", "run", "start:migrate:dev"]
     ports:
       - "3000:3000"
     links:

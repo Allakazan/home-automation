@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the app to the /dist folder
-COPY prisma ./prisma/
+#COPY prisma ./prisma/
 RUN npx prisma generate
 RUN npm run build
 
