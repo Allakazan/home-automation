@@ -1,4 +1,4 @@
-FROM node:18 AS development
+FROM node:18 AS builder
 
 # Specify our working directory, this is in our container/in our image
 WORKDIR /app
@@ -14,6 +14,8 @@ RUN npm install
 COPY . .
 
 # Build the app to the /dist folder
+COPY prisma ./prisma/
+RUN npx prisma generate
 RUN npm run build
 
 ################
@@ -30,9 +32,11 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /app
 
 # Copy all from development stage
-COPY --from=development /app/ .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
 # Run app
-CMD [ "node", "dist/main" ]
+CMD [  "npm", "run", "start:migrate:prod" ]

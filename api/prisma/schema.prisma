@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Device {
+  id           String      @id @unique @default(cuid())
+  name         String
+  room         Room        @relation(fields: [roomId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+  type         DeviceType? @relation(fields: [deviceTypeId], references: [id])
+  archived     Boolean?    @default(false)
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?   @updatedAt
+  roomId       String
+  userId       String
+  deviceTypeId String?
+}
+
+model Room {
+  id     String   @id @unique @default(cuid())
+  name   String
+  archived     Boolean?    @default(false)
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?   @updatedAt
+  Device Device[]
+}
+
+model User {
+  id       String   @id @unique @default(cuid())
+  name     String
+  email    String   @unique
+  password String
+  archived     Boolean?    @default(false)
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?   @updatedAt
+  Device   Device[]
+}
+
+model DeviceType {
+  id      String             @id @unique @default(cuid())
+  title   String
+  type    String
+  icon    String?
+  actions DeviceTypeAction[]
+  Device  Device[]
+}
+
+model DeviceTypeAction {
+  id           String                  @id @unique @default(cuid())
+  action       String
+  label        String
+  input        DeviceTypeActionInput[]
+  DeviceType   DeviceType?             @relation(fields: [deviceTypeId], references: [id])
+  deviceTypeId String?
+}
+
+enum DeviceTypeActionInput {
+  TEXT
+  NUMBER
+  FLOAT
+  SLIDER
+  CALENDAR
+  COLOR_WHEEL
+  TEMPERATURE
+}
