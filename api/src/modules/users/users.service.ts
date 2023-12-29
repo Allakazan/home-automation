@@ -13,7 +13,15 @@ export const userRelations = Prisma.validator<Prisma.UserDefaultArgs>()({});
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  select: Prisma.UserDefaultArgs['select'];
+
+  constructor(private prisma: PrismaService) {
+    this.select = this.prisma.client.user.exclude([
+      'password',
+      'archived',
+      'updatedAt',
+    ]);
+  }
 
   totalRecords(where: Prisma.UserWhereInput = {}) {
     return this.prisma.user.count({
@@ -38,6 +46,7 @@ export class UsersService {
     return paginator.buildPage<Prisma.UserGetPayload<typeof userRelations>>(
       await this.prisma.user.findMany({
         ...userRelations,
+        select: this.select,
         ...paginator.filterProps(),
         where,
         orderBy: { createdAt: 'asc' },
@@ -46,7 +55,10 @@ export class UsersService {
   }
 
   findOne(id: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.prisma.user.findUnique({
+      select: this.select,
+      where: { id },
+    });
   }
 
   findByEmail(email: string): Promise<User | null> {
@@ -63,7 +75,10 @@ export class UsersService {
       await genSalt(SALT_ROUNDS),
     );
 
-    return this.prisma.user.create({ data });
+    return this.prisma.user.create({
+      data,
+      select: this.select,
+    });
   }
 
   update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
@@ -71,10 +86,14 @@ export class UsersService {
       ...updateUserDto,
     };
 
-    return this.prisma.user.update({ data, where: { id } });
+    return this.prisma.user.update({
+      data,
+      select: this.select,
+      where: { id },
+    });
   }
 
   remove(id: string): Promise<User> {
-    return this.prisma.client.user.softDelete({ id });
+    return this.prisma.client.user.softDelete({ id }, this.select);
   }
 }

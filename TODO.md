@@ -7,14 +7,14 @@ Home Automation Tasks
 ### Todo
 
 - [ ] Frontend refactoring (make it work with new api)  
-- [ ] Refresh Tokens  
 - [ ] Add Role Guards  
 - [ ] API Docs using swagger and reDoc  
 
 ### In Progress
 
-- [ ] Ofuscate User Passord  
+- [ ] Refresh Tokens  
 
 ### Done ✓
 
+- [x] Ofuscate User Passord  
 

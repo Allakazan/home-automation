@@ -6,42 +6,47 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 import { FindAllDevicesDto } from './dto/find-all-devices.dto';
 import { Pagination, Page } from '../database/prisma/pagination/pagination';
 
-export const deviceRelations = Prisma.validator<Prisma.DeviceDefaultArgs>()({
-  include: {
-    type: {
+@Injectable()
+export class DevicesService {
+  args: Prisma.DeviceDefaultArgs;
+
+  constructor(private prisma: PrismaService) {
+    this.args = Prisma.validator<Prisma.DeviceDefaultArgs>()({
       select: {
-        id: true,
-        title: true,
-        type: true,
-        icon: true,
-        actions: {
+        ...this.prisma.client.device.exclude([
+          'archived',
+          'updatedAt',
+          'deviceTypeId',
+          'roomId',
+          'userId',
+        ]),
+        type: {
           select: {
-            action: true,
-            label: true,
-            input: true,
+            ...this.prisma.client.deviceType.exclude([]),
+            actions: {
+              select: this.prisma.client.deviceTypeAction.exclude([
+                'id',
+                'deviceTypeId',
+              ]),
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        room: {
+          select: {
+            id: true,
+            name: true,
           },
         },
       },
-    },
-    user: {
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    },
-    room: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-  },
-});
-
-@Injectable()
-export class DevicesService {
-  constructor(private prisma: PrismaService) {}
+    });
+  }
 
   totalRecords(where: Prisma.DeviceWhereInput = {}) {
     return this.prisma.device.count({
@@ -49,9 +54,7 @@ export class DevicesService {
     });
   }
 
-  async findAll(
-    findAllDevicesDto: FindAllDevicesDto,
-  ): Promise<Page<Prisma.DeviceGetPayload<typeof deviceRelations>>> {
+  async findAll(findAllDevicesDto: FindAllDevicesDto): Promise<Page<Device>> {
     const where: Prisma.DeviceWhereInput = {};
 
     if (findAllDevicesDto.name) {
@@ -65,9 +68,9 @@ export class DevicesService {
       await this.totalRecords(where),
     );
 
-    return paginator.buildPage<Prisma.DeviceGetPayload<typeof deviceRelations>>(
+    return paginator.buildPage<Prisma.DeviceGetPayload<typeof this.args>>(
       await this.prisma.device.findMany({
-        ...deviceRelations,
+        ...this.args,
         ...paginator.filterProps(),
         where,
         orderBy: { createdAt: 'asc' },
@@ -77,8 +80,8 @@ export class DevicesService {
 
   findOne(
     id: string,
-  ): Promise<Prisma.DeviceGetPayload<typeof deviceRelations> | null> {
-    return this.prisma.device.findUnique({ ...deviceRelations, where: { id } });
+  ): Promise<Prisma.DeviceGetPayload<typeof this.args> | null> {
+    return this.prisma.device.findUnique({ ...this.args, where: { id } });
   }
 
   create({

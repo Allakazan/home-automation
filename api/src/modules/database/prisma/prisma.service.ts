@@ -5,11 +5,12 @@ import {
   softDeleteModel,
   softDeleteQuery,
 } from './extensions/soft-delete.extension';
+import { excludeFieldsModel } from './extensions/exclude-fields.extension';
 
 // Needed to create a custom client to run model/result functions
 // https://github.com/prisma/prisma/discussions/21361
 export const customPrismaClient = (prismaClient: PrismaClient) => {
-  return prismaClient.$extends(softDeleteModel);
+  return prismaClient.$extends(softDeleteModel).$extends(excludeFieldsModel);
 };
 
 type CustomPrismaClient = ReturnType<typeof customPrismaClient>;

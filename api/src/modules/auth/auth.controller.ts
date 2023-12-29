@@ -18,7 +18,6 @@ export class AuthController {
     return this.authService.login(req.user as Omit<User, 'password'>);
   }
 
-  //@UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: Request) {
     return req.user;

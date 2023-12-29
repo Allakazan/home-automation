@@ -15,12 +15,14 @@ export const softDeleteModel = Prisma.defineExtension((client) =>
         async softDelete<M, A>(
           this: M,
           where: Prisma.Args<M, 'update'>['where'],
+          select: Prisma.Args<M, 'update'>['select'] | null = null,
         ): Promise<Prisma.Result<M, A, 'update'>> {
           const context = Prisma.getExtensionContext(this);
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return (context as any).update({
             where,
+            select,
             data: {
               archived: true,
             },
