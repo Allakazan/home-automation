@@ -20,8 +20,8 @@ services:
       context: "./api"
       target: builder
     volumes:
-      - /app/node_modules
       - ./api:/app
+      - /app/node_modules
     #command: npm run start:dev
     entrypoint: ["npm", "run", "start:migrate:dev"]
     ports:

@@ -32,6 +32,10 @@ $ npm run build
 Run this on project root folder
 
 ```bash
+$ docker-compose build
+```
+
+```bash
 $ docker-compose up -d
 ```
 

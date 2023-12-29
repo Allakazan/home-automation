@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
+import { hash, genSalt } from 'bcrypt';
 import { PrismaService } from '../database/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindAllUsersDto } from './dto/find-all-users.dto';
 import { Pagination, Page } from '../database/prisma/pagination/pagination';
+
+const SALT_ROUNDS = 15;
 
 export const userRelations = Prisma.validator<Prisma.UserDefaultArgs>()({});
 
@@ -46,10 +49,19 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
     };
+
+    data.password = await hash(
+      createUserDto.password,
+      await genSalt(SALT_ROUNDS),
+    );
 
     return this.prisma.user.create({ data });
   }
