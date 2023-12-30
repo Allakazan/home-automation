@@ -12,9 +12,9 @@ Home Automation Tasks
 
 ### In Progress
 
-- [ ] Refresh Tokens  
 
 ### Done ✓
 
 - [x] Ofuscate User Passord  
+- [x] Refresh Tokens  
 
