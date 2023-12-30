@@ -62,3 +62,13 @@ $ npm rum prisma:migrate
 ```bash
 $ npm rum prisma:seed
 ```
+
+### Troubleshooting
+
+#### Installing new packages
+
+On installing new packages (api or client), run this command:
+
+```bash
+$ docker-compose up --build -d -V [CONTAINER]
+```
