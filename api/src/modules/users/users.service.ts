@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
-import { hash, genSalt } from 'bcrypt';
 import { PrismaService } from '../database/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindAllUsersDto } from './dto/find-all-users.dto';
 import { Pagination, Page } from '../database/prisma/pagination/pagination';
-
-const SALT_ROUNDS = 15;
+import { hashed } from '@/common/directives/crypto.directive';
 
 export const userRelations = Prisma.validator<Prisma.UserDefaultArgs>()({});
 
@@ -18,6 +16,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {
     this.select = this.prisma.client.user.exclude([
       'password',
+      'refreshToken',
       'archived',
       'updatedAt',
     ]);
@@ -65,15 +64,20 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  getRefreshTokenById(id: string): Promise<Pick<User, 'refreshToken'> | null> {
+    return this.prisma.user.findUnique({
+      select: {
+        refreshToken: true,
+      },
+      where: { id },
+    });
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
+      password: await hashed(createUserDto.password),
     };
-
-    data.password = await hash(
-      createUserDto.password,
-      await genSalt(SALT_ROUNDS),
-    );
 
     return this.prisma.user.create({
       data,
@@ -81,7 +85,10 @@ export class UsersService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    { password, ...updateUserDto }: UpdateUserDto,
+  ): Promise<User> {
     const data: Prisma.UserUpdateInput = {
       ...updateUserDto,
     };
@@ -89,6 +96,15 @@ export class UsersService {
     return this.prisma.user.update({
       data,
       select: this.select,
+      where: { id },
+    });
+  }
+
+  updateRefreshToken(id: string, refreshToken: string): Promise<User> {
+    return this.prisma.user.update({
+      data: {
+        refreshToken,
+      },
       where: { id },
     });
   }

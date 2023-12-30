@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './auth.controller';
 
@@ -18,7 +19,7 @@ import { AuthController } from './auth.controller';
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('CLIENT_SECRET'),
-        signOptions: { expiresIn: '2h', algorithm: 'HS512' },
+        signOptions: { algorithm: 'HS512' },
       }),
       inject: [ConfigService],
     }),
@@ -27,6 +28,7 @@ import { AuthController } from './auth.controller';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    JwtRefreshStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
