@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -15,6 +16,8 @@ import { FindAllDevicesDto } from './dto/find-all-devices.dto';
 import { PaginationTransformPipe } from '../database/prisma/pagination/dto/pagination.dto';
 
 @Controller('devices')
+@ApiTags('devices')
+@ApiBearerAuth()
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 

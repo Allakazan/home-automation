@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open API Specs</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="redoc-container"></div>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/redoc-try-it-out/dist/try-it-out.min.js"
+    ></script>
+    <script>
+      RedocTryItOut.init(
+        '/swagger-json',
+        {
+          expandResponses: '200,400',
+          hideDownloadButton: true,
+          hideHostname: true,
+        },
+        document.getElementById('redoc-container'),
+      );
+    </script>
+  </body>
+</html>

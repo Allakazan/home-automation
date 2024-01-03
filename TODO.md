@@ -8,13 +8,13 @@ Home Automation Tasks
 
 - [ ] Frontend refactoring (make it work with new api)  
 - [ ] Add Role Guards  
-- [ ] API Docs using swagger and reDoc  
 
 ### In Progress
 
 
 ### Done ✓
 
+- [x] API Docs using swagger and reDoc  
 - [x] Ofuscate User Passord  
 - [x] Refresh Tokens  
 

@@ -41,6 +41,10 @@ export class AuthService {
     return await this.generateTokens(id, email);
   }
 
+  async logout(userId: string) {
+    return await this.usersService.updateRefreshToken(userId, null);
+  }
+
   async refreshSession(userId: string, email: string, refreshToken: string) {
     const foundUser = await this.usersService.getRefreshTokenById(userId);
 
