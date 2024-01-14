@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:studio": "dotenv -e .env.local -- prisma studio",
     "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "prisma:reset": "dotenv -e .env.local -- prisma migrate reset",
     "prisma:seed": "dotenv -e .env.local -- prisma db seed"
   },
   "prisma": {
