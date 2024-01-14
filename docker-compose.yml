@@ -42,9 +42,10 @@ services:
       - node-webapp-network
 
   client:
-    # stdin_open: true
-    # environment:
-    #   - CHOKIDAR_USEPOLLING=true
+    #stdin_open: true
+    #environment:
+    #  - CHOKIDAR_USEPOLLING=true
+    #  - WATCHPACK_POLLING=true
     build:
       dockerfile: Dockerfile
       context: ./client
